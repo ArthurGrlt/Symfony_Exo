@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mise à jour tâche{% endblock %}
+
+{% block body %}
+
+ <div class="container">
+        <div class="row">
+            <div class="card text-center" style="width: 100%;">
+                <div class="card-header">
+
+                    <h2 class="card-title">
+                        {{task.name}}
+                    </h2>
+                    
+                </div>
+                <div class="card-body">
+                    {% if task.state %}
+                        <b class="text-success">TERMINE</b><br/>
+                    {% endif %}
+                    {% if task.state == false %}
+                        <b class="text-danger">PAS ENCORE TERMINE</b><br/>
+                    {% endif %}
+
+                    <b>à faire avant le :</b> {{task.deadline | date('d/m/Y')}}<br/>
+                    <a href="{{path('removeTask', {id: task.id})}}"><button class="btn btn-danger">Supprimer la tâche</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <h2 class="mt-5">Modifier la tâche: </h2>
+        {{ form_start(taskForm) }}
+            {{ form_row(taskForm.name) }}
+            <select name="userId">
+                {% for user in users %}
+                    <option value="{{ user.id }}" {% if task.userId.id == user.id %} selected {% endif %}>{{ user.firstname }} {{ user.lastname }}</option>
+                {% endfor %}
+            </select>
+            {{ form_row(taskForm.deadline) }}
+            {{ form_row(taskForm.submit) }}
+        {{ form_end(taskForm) }}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tâches{% endblock %}
+
+{% block body %}
+
+    <h1>Liste des tâches</h1>
+
+    <div class="container">
+        <div class="row">
+        {% for task in tasks %}
+            <div class="card text-center" style="width: 100%;">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        {{task.name}}
+                    </h2>
+                </div>
+                <div class="card-body">
+                    A faire avant le : {{task.deadline | date('d/m/Y')}}<br/>
+                    {% if task.state %}
+                        <b class="text-success">TERMINE</b><br/>
+                    {% endif %}
+                    {% if task.state == false %}
+                        <b class="text-danger">PAS ENCORE TERMINE</b><br/>
+                    {% endif %}
+
+                    <a href="{{path('updateTask', {id: task.id})}}"><button class="btn btn-warning">Modifier la tâche</button></a>
+                </div>
+            </div>
+            {% endfor %}
+            {% if tasks == [] %}
+                <p>Il n'y a aucune tâche :(</p>
+            {% endif %}
+        </div>
+        
+        <div class="container mt-5"> 
+        <h1>Nouvelles tâches</h1> 
+            {{ form_row(taskForm.name) }}
+            <select name="userId">
+                {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.firstname }} {{ user.lastname }}</option>
+                {% endfor %}
+            </select>
+            {{ form_row(taskForm.deadline) }}
+            {{ form_row(taskForm.submit) }}
+        {{ form_end(taskForm) }}
+    </div>
+
+{% endblock %}

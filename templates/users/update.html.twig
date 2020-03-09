@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{user.firstname}} {{user.lastname}}{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+
+        <h2 class="mt-5 mb-3">Toutes les tâches de {{user.firstname}}</h2>
+
+        <div class="row">
+            {% for task in user.tasks %}
+            <div class="col-md-3">
+                <a href="{{ path('updateTask', {id: task.id}) }}">
+                    <div class="mx-auto card text-center">
+                        <h5 class="card-title">{{ task.name }}</h5>
+                        <p class="card-text">Pour <strong>{{ task.userId.firstname }} {{ task.userId.lastname }}</strong> le {{ task.deadline.date | date("m/d/Y") }}</p>
+                        {% if task.state %}
+                        <p class="bg-success card-text">Fait</p>
+                        {% else %}
+                        <p class="bg-danger card-text">A faire</p>
+                        {% endif %}
+                    </div>
+                </a>
+                <div class="text-center">
+                    <a href="{{ path('changeState', {id: task.id}) }}">
+                        <button class="btn btn-primary">{% if task.state %}A terminer avant le{% else %}Terminé{% endif %}</button>
+                    </a>
+                    <a href="{{ path('removeTask', {id: task.id}) }}">
+                        <button class="btn btn-danger">Supprimer</button>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+            {% if user.tasks.count() == 0 %}
+                <p>{{ user.firstname }} Ne possède aucune tâche :(</p>
+            {% endif %}
+        </div>
+
+        <h2 class="mt-5 mb-3">Modifier l'utilisateur</h2>
+        {{ form(userForm) }}
+    <div class="container">
+
+{% endblock %}
